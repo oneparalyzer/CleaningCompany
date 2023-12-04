@@ -1,0 +1,70 @@
+﻿@model CreateServiceRequest
+
+<h2 class="center">Создать услугу</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-3">
+            <form id="createForm">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </form>
+            <div id="errorContainer"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                url: '@Url.Action("Guidd", "Services")',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                }
+            });
+
+
+            $('#createForm').submit(function (e) {
+                e.preventDefault();
+
+                var formData = {
+                    Title: $('#title').val()
+                };
+
+
+                $.ajax({
+                    url: '@Url.Action("Create", "Services")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log(response)
+                        if (!response.isSuccess) {
+                            var errors = response.errors;
+                            var errorHtml = "";
+                            errors.forEach(function (error) {
+                                errorHtml += "<p>" + error.message + "</p>";
+                            });
+                            $("#errorContainer").html(errorHtml);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error)
+                    }
+                });
+            });
+        });
+    </script>
+}
