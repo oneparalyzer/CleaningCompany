@@ -15,7 +15,8 @@ public sealed class UnitOfWork : IUnitOfWork
         IStreetRepository streetRepository, 
         IAddressRepository addressRepository,
         IPriceListRepository priceListRepository,
-        IOrderRepository orderRepository)
+        IOrderRepository orderRepository,
+        IOrderEmployeeRepository orderEmployeeRepository)
     {
         _context = context;
         UserRepository = userRepository;
@@ -26,6 +27,7 @@ public sealed class UnitOfWork : IUnitOfWork
         AddressRepository = addressRepository;
         PriceListRepository = priceListRepository;
         OrderRepository = orderRepository;
+        OrderEmployeeRepository = orderEmployeeRepository;
     }
 
     public IUserRepository UserRepository { get; }
@@ -36,6 +38,7 @@ public sealed class UnitOfWork : IUnitOfWork
     public IAddressRepository AddressRepository { get; }
     public IPriceListRepository PriceListRepository { get; }
     public IOrderRepository OrderRepository { get; }
+    public IOrderEmployeeRepository OrderEmployeeRepository { get; }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {

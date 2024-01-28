@@ -1,4 +1,5 @@
 ﻿using CleaningCompany.Application.Common.Interfaces.Repositories;
+using CleaningCompany.Domain.AggregateModels.OrderEmployeeAggregate;
 using CleaningCompany.Infrastructure.Identity.Entities;
 using CleaningCompany.Infrastructure.Persistence;
 using CleaningCompany.Infrastructure.Persistence.Repositories;
@@ -44,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IPriceListRepository, PriceListRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IOrderEmployeeRepository, OrderEmployeeRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

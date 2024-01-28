@@ -10,6 +10,7 @@ public interface IUnitOfWork
     IStreetRepository StreetRepository { get; }
     IAddressRepository AddressRepository { get; }
     IOrderRepository OrderRepository { get; }
+    IOrderEmployeeRepository OrderEmployeeRepository { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

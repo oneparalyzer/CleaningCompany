@@ -12,10 +12,12 @@ using CleaningCompany.Contracts.Services.Requests;
 using CleaningCompany.Contracts.Services.Responses;
 using CleaningCompany.Domain.Common.OperationResults;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleaningCompany.MVC.Controllers;
 
+[Authorize(Roles = "Admin")]
 public sealed class RegionsController : Controller
 {
     private readonly ISender _sender;

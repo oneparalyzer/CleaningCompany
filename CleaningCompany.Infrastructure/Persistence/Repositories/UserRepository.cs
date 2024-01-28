@@ -99,4 +99,9 @@ public sealed class UserRepository : IUserRepository
     {
         await _signInManager.SignOutAsync();
     }
+
+    public async Task<bool> IsExistByIdAsync(UserId userId)
+    {
+        return await _userManager.FindByIdAsync(userName) is not null;
+    }
 }

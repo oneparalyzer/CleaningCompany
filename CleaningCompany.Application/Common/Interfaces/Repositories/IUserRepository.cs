@@ -10,5 +10,6 @@ public interface IUserRepository
     Task CreateAndSaveAsync(User user);
     Task<bool> IsExistByEmailAsync(EmailAddress email);
     Task<bool> IsExistByUserNameAsync(string userName);
+    Task<bool> IsExistByIdAsync(UserId userId);
     Task<User?> GetByIdAsync(UserId id);
 }

@@ -7,11 +7,13 @@ using CleaningCompany.Contracts.PriceLists.Responses;
 using CleaningCompany.Contracts.Services.Responses;
 using CleaningCompany.Domain.Common.OperationResults;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace CleaningCompany.MVC.Controllers;
 
+[Authorize(Roles = "Admin, Worker")]
 public sealed class PriceListsController : Controller
 {
     private readonly ISender _sender;
