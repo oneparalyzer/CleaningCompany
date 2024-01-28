@@ -1,5 +1,5 @@
 ﻿<h2>Вход</h2>
-
+<div id="errorContainer"></div>
 <form id="loginForm">
     <div class="form-group">
         <label for="userName">Имя пользователя</label>
@@ -18,8 +18,8 @@
         $('#loginForm').submit(function (e) {
             e.preventDefault(); // Отменить стандартное поведение отправки формы
 
-            var formData = $(this).serialize(); // Получить данные формы в виде строки
-
+            let formData = $(this).serialize(); // Получить данные формы в виде строки
+            console.log(formData);
             $.ajax({
                 url: '@Url.Action("Login", "Auth")', // Указать URL-адрес метода действия
                 type: 'POST',
@@ -27,6 +27,16 @@
                 success: function (response) {
                     // Обработать успешный ответ
                     console.log(response);
+                    if (response.isSuccess) {
+                        window.location.href = '/Home/Index';
+                    } else {
+                        var errors = response.errors;
+                        var errorHtml = "";
+                        errors.forEach(function (error) {
+                            errorHtml += "<p>" + error.message + "</p>";
+                        });
+                        $("#errorContainer").html(errorHtml);
+                    }
                 },
                 error: function (xhr, status, error) {
                     // Обработать ошибку

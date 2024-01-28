@@ -1,10 +1,10 @@
 ﻿using CleaningCompany.Application.Common.Interfaces.Mediator;
 using CleaningCompany.Application.Common.Interfaces.Repositories;
 using CleaningCompany.Domain.Common.OperationResults;
-using CleaningCompany.Domain.Common.Errors;
 using ComputerRepair.Domain.Common.Errors;
 using CleaningCompany.Domain.AggregateModels.RegionAggregate;
 using CleaningCompany.Domain.AggregateModels.RegionAggregate.ValueObjects;
+using CleaningCompany.Domain.Common.Errors;
 
 namespace CleaningCompany.Application.CQRS.Regions.Commands.Update;
 
@@ -19,14 +19,15 @@ public sealed class UpdateRegionCommandHandler : ICommandHandler<UpdateRegionCom
 
     public async Task<Result> Handle(UpdateRegionCommand command, CancellationToken cancellationToken)
     {
+        var errors = new List<Error>();
+
         bool regionIsExistingByTitle = await _unitOfWork.RegionRepository
-            .IsExistingByTitleAsync(command.Title, cancellationToken);
+            .IsExistingByTitleAsync(command.NewTitle, cancellationToken);
 
         if (regionIsExistingByTitle)
         {
-            return Result.Failure(Errors.Region
-                .AlreadyExistByTitle(command.Title)
-                .ToList());
+            errors.Add(Errors.Region
+                .AlreadyExistByTitle(command.NewTitle));
         }
 
         Region? regionById = await _unitOfWork.RegionRepository
@@ -34,12 +35,16 @@ public sealed class UpdateRegionCommandHandler : ICommandHandler<UpdateRegionCom
 
         if (regionById is null)
         {
-            return Result.Failure(Errors.Region
-                .NotFoundById(command.RegionId.ToString())
-                .ToList());
+            errors.Add(Errors.Region
+                .NotFoundById(command.RegionId.ToString()));
         }
 
-        regionById.Rename(command.Title);
+        if (errors.Any())
+        {
+            return Result.Failure(errors);
+        }
+
+        regionById.Update(command.NewTitle);
 
         await _unitOfWork.RegionRepository.UpdateAsync(regionById, cancellationToken);
 

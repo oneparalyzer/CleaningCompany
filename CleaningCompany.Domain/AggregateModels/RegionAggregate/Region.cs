@@ -18,7 +18,7 @@ public sealed class Region : AggregateRoot<RegionId>
         return new Region(RegionId.Create(), title);
     }
 
-    public void Rename(string newTitle)
+    public void Update(string newTitle)
     {
         Title = newTitle;
     }

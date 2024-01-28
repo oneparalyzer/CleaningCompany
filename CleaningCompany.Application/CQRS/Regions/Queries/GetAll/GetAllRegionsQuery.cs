@@ -3,4 +3,4 @@ using CleaningCompany.Contracts.Regions.Responses;
 
 namespace CleaningCompany.Application.CQRS.Regions.Queries.GetAll;
 
-public record GetAllRegionsQuery() : IQuery<IEnumerable<GetAllRegionsResponse>>;
+public record GetAllRegionsQuery() : IQuery<List<GetAllRegionsResponse>>;

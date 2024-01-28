@@ -2,7 +2,7 @@
 
 namespace CleaningCompany.Domain.AggregateModels.UserAggregate.Enums;
 
-public sealed class Role : GuidEnumeration
+public sealed class Role : Enumeration<Guid>
 {
     private Role(Guid id, string name) : base(id, name) { }
 

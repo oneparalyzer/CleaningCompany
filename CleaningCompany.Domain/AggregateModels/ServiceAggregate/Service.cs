@@ -16,4 +16,9 @@ public sealed class Service : AggregateRoot<ServiceId>
     {
         return new Service(ServiceId.Create(), title);
     }
+
+    public void Update(string newTitle)
+    {
+        Title = newTitle;
+    }
 }

@@ -9,6 +9,6 @@ public class ServiceConfiguration : Profile
     public ServiceConfiguration()
     {
         CreateMap<Service, GetAllServicesResponse>()
-            .ForPath(dst => dst.Id, opt => opt.MapFrom(src => src.Id.Value));
+            .ForPath(dst => dst.ServiceId, opt => opt.MapFrom(src => src.Id.Value));
     }
 }

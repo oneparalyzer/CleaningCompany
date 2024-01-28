@@ -4,4 +4,4 @@ namespace CleaningCompany.Application.CQRS.Regions.Commands.Update;
 
 public record UpdateRegionCommand(
     Guid RegionId,
-    string Title) : ICommand; 
+    string NewTitle) : ICommand;

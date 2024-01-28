@@ -5,9 +5,9 @@ using CleaningCompany.Contracts.Services.Responses;
 using CleaningCompany.Domain.AggregateModels.ServiceAggregate;
 using CleaningCompany.Domain.Common.OperationResults;
 
-namespace CleaningCompany.Application.CQRS.Services.Queries;
+namespace CleaningCompany.Application.CQRS.Services.Queries.GetAll;
 
-public sealed class GetAllServicesQueryHandler : IQueryHandler<GetAllServicesQuery, IEnumerable<GetAllServicesResponse>>
+public sealed class GetAllServicesQueryHandler : IQueryHandler<GetAllServicesQuery, List<GetAllServicesResponse>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,13 +18,15 @@ public sealed class GetAllServicesQueryHandler : IQueryHandler<GetAllServicesQue
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<IEnumerable<GetAllServicesResponse>>> Handle(GetAllServicesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetAllServicesResponse>>> Handle(
+        GetAllServicesQuery query, 
+        CancellationToken cancellationToken)
     {
-        IEnumerable<Service> services = await _unitOfWork.ServiceRepository
+        List<Service> services = await _unitOfWork.ServiceRepository
             .GetAllAsync(cancellationToken);
 
         var servicesResponse = _mapper
-            .Map<IEnumerable<GetAllServicesResponse>>(services);
+            .Map<List<GetAllServicesResponse>>(services);
 
         return Result.Success(servicesResponse);
     }

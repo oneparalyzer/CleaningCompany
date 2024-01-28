@@ -35,10 +35,10 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
     private List<Error> ConvertToErrors(IDictionary<string, string[]> validationErrors)
     {
         return validationErrors
-        .SelectMany(fieldErrors => fieldErrors.Value, (fieldErrors, fieldError) => new Error(
-            $"{fieldErrors.Key}.ValidationError",
-            fieldError,
-            fieldErrors.Key))
-        .ToList();
+            .SelectMany(fieldErrors => fieldErrors.Value, (fieldErrors, fieldError) => new Error(
+                $"{fieldErrors.Key}.ValidationError",
+                fieldError,
+                fieldErrors.Key))
+            .ToList();
     }
 }

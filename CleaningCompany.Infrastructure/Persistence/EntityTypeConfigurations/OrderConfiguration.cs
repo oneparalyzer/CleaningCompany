@@ -29,17 +29,12 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
                 id => id.Value,
                 value => AddressId.Create(value));
 
-        builder.Property(x => x.OrderStatusId)
-            .HasConversion(
-                id => id.Value,
-                value => OrderStatusId.Create(value));
-
         builder.OwnsOne(x => x.Price).Property(x => x.Value).IsRequired();
 
         builder.Property(x => x.CreatedDate).IsRequired();
 
         builder.HasMany(x => x.Positions).WithOne().HasForeignKey("_orderId");
-        builder.HasOne(x => x.OrderStatus).WithMany().HasForeignKey(x => x.OrderStatusId);
+        builder.HasMany(x => x.Statuses).WithMany();
         builder.HasOne<Address>().WithMany().HasForeignKey(x => x.AddressId);
 
         builder.HasOne<CustomIdentityUser>().WithMany().HasForeignKey("_clientId");

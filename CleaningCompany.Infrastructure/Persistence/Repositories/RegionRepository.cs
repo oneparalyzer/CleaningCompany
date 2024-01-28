@@ -20,7 +20,7 @@ public sealed class RegionRepository : IRegionRepository
         await _context.Regions.AddAsync(region, cancellationToken);
     }
 
-    public async Task<IEnumerable<Region>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Region>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Regions.ToListAsync(cancellationToken);
     }

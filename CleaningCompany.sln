@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleaningCompany.Application
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleaningCompany.MVC", "CleaningCompany.MVC\CleaningCompany.MVC.csproj", "{58E3EAB2-CD21-4475-94B4-E8E11C18B6DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleaningCompany.Contracts", "CleaningCompany.Contracts\CleaningCompany.Contracts.csproj", "{147ABE36-4759-47AE-B3E1-4275ECC2AEF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleaningCompany.Contracts", "CleaningCompany.Contracts\CleaningCompany.Contracts.csproj", "{147ABE36-4759-47AE-B3E1-4275ECC2AEF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

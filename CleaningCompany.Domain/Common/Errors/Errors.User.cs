@@ -6,6 +6,10 @@ public partial class Errors
 {
     public static class User
     {
+        public static Error CannotBeIdentified() => new Error(
+            code: "User.CannotBeIdentified",
+            message: "Пользователь не идентефицирован.");
+
         public static Error AlreadyExistByEmail(string fieldValue) => new Error(
             code: "User.AlreadyExistByEmail",
             message: "Пользователь с таким Email уже существует.",
@@ -22,5 +26,11 @@ public partial class Errors
             code: "User.InvalidCredentionals",
             message: "Не верный Email или пароль.",
             field: "userName");
+
+        public static Error NotFoundById(string fieldValue) => new Error(
+            code: "User.NotFoundById",
+            message: "Прайс-лист не найдена.",
+            field: "userId",
+            fieldValue: fieldValue);
     }
 }

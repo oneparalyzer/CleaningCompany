@@ -6,7 +6,7 @@ public sealed class UpdateRegionCommandValidator : AbstractValidator<UpdateRegio
 {
     public UpdateRegionCommandValidator()
     {
-        RuleFor(x => x.Title).MinimumLength(5).MaximumLength(50);
+        RuleFor(x => x.NewTitle).MinimumLength(5).MaximumLength(50);
         RuleFor(x => x.RegionId).NotEqual(Guid.Empty);
     }
 }

@@ -19,4 +19,10 @@ public sealed class City : AggregateRoot<CityId>
     {
         return new City(CityId.Create(), title, regionId);
     }
+
+    public void Update(string newTitle, RegionId newRegionId)
+    {
+        Title = newTitle;
+        RegionId = newRegionId;
+    }
 }

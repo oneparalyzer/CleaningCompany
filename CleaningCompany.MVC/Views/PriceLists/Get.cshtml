@@ -1,0 +1,54 @@
+﻿@model Result<GetPriceListResponse>
+
+<div class="container">
+    <h1>Детали прайс-листа</h1>
+
+    <div class="row">
+        <div class="col">
+            <h4>Дата создания:</h4>
+            <p>@Model.Value.CreatedDate.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h4>Информация о сотруднике удтвердившем прайс-лист</h4>
+    <div class="row">
+        <div class="col">
+            <h5>Фамилия:</h5>
+            <p>@Model.Value.EmployeeSurname</p>
+        </div>
+        <div class="col">
+            <h5>Имя:</h5>
+            <p>@Model.Value.EmployeeName</p>
+        </div>
+        <div class="col">
+            <h5>Отчество:</h5>
+            <p>@Model.Value.EmployeePatronymic</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h4>Позиции</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Цена, руб.</th>
+                <th>Название услуги</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < Model.Value.Positions.Count + 1; i++)
+            {
+            var position = Model.Value.Positions[i - 1];
+            <tr>
+                <td>@i</td>
+                <td>@position.Price</td>
+                <td>@position.ServiceTitle</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

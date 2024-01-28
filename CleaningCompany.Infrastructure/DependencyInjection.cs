@@ -40,8 +40,10 @@ public static class DependencyInjection
         services.AddScoped<IRegionRepository, RegionRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped<IStreetRepository, StreetRepository>();
-        services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IPriceListRepository, PriceListRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

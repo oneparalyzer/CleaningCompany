@@ -1,7 +1,6 @@
 ﻿using CleaningCompany.Application.Common.Interfaces.Mediator;
 using CleaningCompany.Application.Common.Interfaces.Repositories;
 using CleaningCompany.Domain.Common.OperationResults;
-using CleaningCompany.Domain.Common.Errors;
 using ComputerRepair.Domain.Common.Errors;
 using CleaningCompany.Domain.AggregateModels.ServiceAggregate;
 

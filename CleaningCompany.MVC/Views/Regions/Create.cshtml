@@ -1,0 +1,68 @@
+﻿
+
+<h2 class="center">Создать область</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-3">
+            <form id="createForm">
+                <div class="form-group">
+                    <label for="title">Название:</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </form>
+            <div id="errorContainer"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#createForm').submit(function (e) {
+                e.preventDefault();
+
+                var serviceData = {
+                    Title: $('#title').val()
+                };
+
+                sendCreateRequest(serviceData);
+            });
+        });
+
+
+
+        function sendCreateRequest(data) {
+            $.ajax({
+                url: '@Url.Action("Create", "Regions")',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (createResponse) {
+                    console.log(createResponse);
+                    printResult(createResponse);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function printResult(operationResult) {
+            if (!operationResult.isSuccess) {
+                var errors = operationResult.errors;
+                var errorHtml = errors.map(error => `<p>${error.message}</p>`).join('');
+                $("#errorContainer").html(errorHtml);
+            } else {
+                $("#errorContainer").html("<p>Успешно</p>");
+                $("#title").val("");
+            }
+        }
+    </script>
+}
+

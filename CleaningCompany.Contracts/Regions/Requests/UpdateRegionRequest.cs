@@ -2,4 +2,4 @@
 
 public record UpdateRegionRequest(
     Guid RegionId,
-    string Title);
+    string NewTitle);

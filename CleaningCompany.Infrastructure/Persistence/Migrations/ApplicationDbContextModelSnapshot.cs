@@ -176,17 +176,12 @@ namespace CleaningCompany.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("OrderStatusId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("_clientId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
-
-                    b.HasIndex("OrderStatusId");
 
                     b.HasIndex("_clientId");
 
@@ -319,19 +314,19 @@ namespace CleaningCompany.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("71115482-0b4e-4a13-851f-6320d294d5ba"),
+                            Id = new Guid("683125fa-8c1d-42ee-97e3-01926e17b50e"),
                             Name = "Client",
                             NormalizedName = "CLIENT"
                         },
                         new
                         {
-                            Id = new Guid("c0198c53-2ae5-437e-9037-8dc389965905"),
+                            Id = new Guid("1727cf08-4dab-45af-bd05-9071e571421f"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("3700b933-a3a8-427c-860c-135362bb6d1e"),
+                            Id = new Guid("ac8bd702-42d0-4526-9ec4-6969b198dab3"),
                             Name = "Worker",
                             NormalizedName = "WORKER"
                         });
@@ -517,6 +512,21 @@ namespace CleaningCompany.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("OrderOrderStatus", b =>
+                {
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StatusesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("OrderId", "StatusesId");
+
+                    b.HasIndex("StatusesId");
+
+                    b.ToTable("OrderOrderStatus");
+                });
+
             modelBuilder.Entity("CleaningCompany.Domain.AggregateModels.AddressAggregate.Address", b =>
                 {
                     b.HasOne("CleaningCompany.Domain.AggregateModels.StreetAggreagte.Street", null)
@@ -590,12 +600,6 @@ namespace CleaningCompany.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CleaningCompany.Domain.AggregateModels.OrderAggregate.Entities.OrderStatus", "OrderStatus")
-                        .WithMany()
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CleaningCompany.Infrastructure.Identity.Entities.CustomIdentityUser", null)
                         .WithMany()
                         .HasForeignKey("_clientId")
@@ -617,8 +621,6 @@ namespace CleaningCompany.Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
                         });
-
-                    b.Navigation("OrderStatus");
 
                     b.Navigation("Price")
                         .IsRequired();
@@ -723,6 +725,21 @@ namespace CleaningCompany.Infrastructure.Migrations
                     b.HasOne("CleaningCompany.Infrastructure.Identity.Entities.CustomIdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OrderOrderStatus", b =>
+                {
+                    b.HasOne("CleaningCompany.Domain.AggregateModels.OrderAggregate.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CleaningCompany.Domain.AggregateModels.OrderAggregate.Entities.OrderStatus", null)
+                        .WithMany()
+                        .HasForeignKey("StatusesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

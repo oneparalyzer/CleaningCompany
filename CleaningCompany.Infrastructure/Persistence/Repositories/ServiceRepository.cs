@@ -19,9 +19,21 @@ public sealed class ServiceRepository : IServiceRepository
         await _context.Services.AddAsync(service, cancellationToken);
     }
 
-    public async Task<IEnumerable<Service>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Service>> GetAllAsync(
+        CancellationToken cancellationToken = default)
     {
-        return await _context.Services.ToListAsync(cancellationToken);
+        return await _context.Services.OrderBy(x => x.Title).ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<Service>> GetAllByIdsAsync(
+        List<ServiceId> serviceIds, 
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Services
+            .Where(x => serviceIds.Contains(x.Id))
+            .OrderBy(x => x.Title)
+            .ToListAsync(cancellationToken);
+
     }
 
     public async Task<Service?> GetByIdAsync(ServiceId serviceId, CancellationToken cancellationToken = default)

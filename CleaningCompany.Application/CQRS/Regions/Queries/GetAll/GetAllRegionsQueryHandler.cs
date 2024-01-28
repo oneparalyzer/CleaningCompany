@@ -7,7 +7,7 @@ using CleaningCompany.Domain.Common.OperationResults;
 
 namespace CleaningCompany.Application.CQRS.Regions.Queries.GetAll;
 
-public sealed class GetAllRegionsQueryHandler : IQueryHandler<GetAllRegionsQuery, IEnumerable<GetAllRegionsResponse>>
+public sealed class GetAllRegionsQueryHandler : IQueryHandler<GetAllRegionsQuery, List<GetAllRegionsResponse>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,15 +18,15 @@ public sealed class GetAllRegionsQueryHandler : IQueryHandler<GetAllRegionsQuery
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<IEnumerable<GetAllRegionsResponse>>> Handle(
+    public async Task<Result<List<GetAllRegionsResponse>>> Handle(
         GetAllRegionsQuery query,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Region> regions = await _unitOfWork.RegionRepository
+        List<Region> regions = await _unitOfWork.RegionRepository
             .GetAllAsync(cancellationToken);
 
         var regionsResponse = _mapper
-            .Map<IEnumerable<GetAllRegionsResponse>>(regions);
+            .Map<List<GetAllRegionsResponse>>(regions);
 
         return Result.Success(regionsResponse);
     }

@@ -2,6 +2,6 @@
 
 public class GetAllServicesResponse
 {
-    public Guid Id { get; set; }
+    public Guid ServiceId { get; set; }
     public string Title { get; set; } = null!;
 }

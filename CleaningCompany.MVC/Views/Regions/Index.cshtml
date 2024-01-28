@@ -1,0 +1,91 @@
+﻿@model Result<List<GetAllRegionsResponse>>
+
+@if (!Model.IsSuccess)
+{
+    foreach (var item in Model.Errors)
+    {
+        <p>@item.Message</p>
+    }
+}
+else
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Название</th>
+                <th scope="col">Переименовать</th>
+                <th scope="col">Удалить</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < Model.Value.Count() + 1; i++)
+            {
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>
+                        <input class="form-control" type="text" id="titleInput_@Model.Value[i - 1]." value="@Model.Value[i - 1].Title">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="renameService('@Model.Value[i - 1].RegionId')">Переименовать</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="deleteService('@Model.Value[i - 1].RegionId')">Удалить</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    function deleteService(regionId) {
+        var confirmDelete = confirm("Вы уверены, что хотите удалить эту услугу?");
+        if (confirmDelete) {
+            $.ajax({
+                url: "/Regions/Remove/" + regionId,
+                method: "POST",
+                success: function (response) {
+                    location.reload();
+                    console.log(response)
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибок при удалении
+                }
+            });
+        }
+    }
+
+    function renameService(regionId) {
+        var confirmRename = confirm("Вы уверены, что хотите переименовать эту услугу?");
+        if (confirmRename) {
+            var newTitle = document.getElementById('titleInput_' + regionId).value;
+
+            var serviceData = {
+                RegionId: regionId,
+                NewTitle: newTitle
+            };
+            sendRenameRequest(serviceData);
+        }
+
+    }
+
+    function sendRenameRequest(data) {
+        $.ajax({
+            url: '@Url.Action("Update", "Regions")',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (renameResponse) {
+                console.log(renameResponse);
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+</script>

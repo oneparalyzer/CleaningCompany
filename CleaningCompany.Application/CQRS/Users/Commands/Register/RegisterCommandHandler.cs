@@ -72,7 +72,7 @@ public sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand>
             return role;
         }
         
-        role = GuidEnumeration.GetAll<Role>().FirstOrDefault(x => x.Id == command.RoleId);
+        role = Role.GetAll<Role>().FirstOrDefault(x => x.Id == command.RoleId);
 
         if (role is null)
         {

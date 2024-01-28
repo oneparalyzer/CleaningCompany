@@ -1,8 +1,9 @@
 ﻿using CleaningCompany.Application.CQRS.Services.Commands.Create;
-using CleaningCompany.Application.CQRS.Services.Queries;
+using CleaningCompany.Application.CQRS.Services.Commands.Remove;
+using CleaningCompany.Application.CQRS.Services.Commands.Update;
+using CleaningCompany.Application.CQRS.Services.Queries.GetAll;
 using CleaningCompany.Contracts.Services.Requests;
 using CleaningCompany.Contracts.Services.Responses;
-using CleaningCompany.Domain.AggregateModels.UserAggregate.Enums;
 using CleaningCompany.Domain.Common.OperationResults;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleaningCompany.MVC.Controllers;
 
-public class ServicesController : Controller
+[Authorize(Roles = "Admin")]
+public sealed class ServicesController : Controller
 {
     private readonly ISender _sender;
 
@@ -22,7 +24,7 @@ public class ServicesController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        Result<IEnumerable<GetAllServicesResponse>> result = await _sender
+        Result<List<GetAllServicesResponse>> result = await _sender
             .Send(new GetAllServicesQuery());
 
         return View(result);
@@ -34,21 +36,30 @@ public class ServicesController : Controller
         return View();
     }
 
-    [HttpGet]
-    public IActionResult Guidd()
-    {
-        return Json(new
-        {
-            val = Guid.NewGuid()
-        });
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create([FromBody]CreateServiceRequest request)
     {
         Result result = await _sender
             .Send(new CreateServiceCommand(request.Title));
 
-        return Json(result);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Remove([FromRoute] Guid id)
+    {
+        Result result = await _sender
+            .Send(new RemoveServiceCommand(id));
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update([FromBody] UpdateServiceRequest request)
+    {
+        Result result = await _sender
+            .Send(new UpdateServiceCommand(request.ServiceId, request.NewTitle));
+
+        return Ok(result);
     }
 }

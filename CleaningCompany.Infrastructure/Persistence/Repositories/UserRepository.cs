@@ -1,6 +1,8 @@
 ﻿using CleaningCompany.Application.Common.Interfaces.Repositories;
 using CleaningCompany.Domain.AggregateModels.UserAggregate;
+using CleaningCompany.Domain.AggregateModels.UserAggregate.Enums;
 using CleaningCompany.Domain.AggregateModels.UserAggregate.ValueObjects;
+using CleaningCompany.Domain.Common.ValueObjects;
 using CleaningCompany.Infrastructure.Identity.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,17 @@ public sealed class UserRepository : IUserRepository
     {
         _userManager = userManager;
         _signInManager = signInManager;
+    }
+
+    public async Task<User?> GetByIdAsync(UserId id)
+    {
+        CustomIdentityUser? identityUser = await _userManager.FindByIdAsync(id.Value.ToString());
+        if (identityUser is null)
+        {
+            return null;
+        }
+
+        return Adapt(identityUser);
     }
 
     public async Task<bool> TryPasswordSignInAsync(
@@ -67,5 +80,23 @@ public sealed class UserRepository : IUserRepository
             Email = user.EmailAddress.Value,
             NormalizedEmail = user.EmailAddress.Value.ToString().ToUpper(),
         };
+    }
+
+    private User Adapt(CustomIdentityUser identityUser)
+    {
+        return User.Create(
+            identityUser.Name,
+            FullName.Create(
+                identityUser.Surname,
+                identityUser.Name,
+                identityUser.Patronymic),
+            EmailAddress.Create(identityUser.Email),
+            Password.Create("jdkfsdj"),
+            Role.Admin);
+    }
+
+    public async Task LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
     }
 }

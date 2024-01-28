@@ -1,5 +1,6 @@
 ﻿using CleaningCompany.Domain.AggregateModels.PriceListAggregate.Entities;
 using CleaningCompany.Domain.AggregateModels.PriceListAggregate.ValueObjects;
+using CleaningCompany.Domain.AggregateModels.ServiceAggregate.ValueObjects;
 using CleaningCompany.Domain.AggregateModels.UserAggregate.ValueObjects;
 using CleaningCompany.Domain.Common.Errors;
 using CleaningCompany.Domain.Common.OperationResults;
@@ -50,7 +51,7 @@ public sealed class PriceList : AggregateRoot<PriceListId>
         var priceList = new PriceList(
             PriceListId.Create(),
             employeeId,
-            DateTime.Now,
+            DateTime.UtcNow,
             positions);
 
         return Result.Success(priceList);
@@ -59,11 +60,11 @@ public sealed class PriceList : AggregateRoot<PriceListId>
     private static Result ValidatePositions(List<PriceListPosition> positions)
     {
         var errors = new List<Error>();
-        var positionsHashSet = new HashSet<PriceListPosition>();
+        var serviceIds = new HashSet<ServiceId>();
 
         foreach (var position in positions)
         {
-            if (!positionsHashSet.Add(position))
+            if (!serviceIds.Add(position.ServiceId))
             {
                 errors.Add(Errors.PriceListPosition
                     .CannotBeRepeatedByServiceId(position.ServiceId.ToString()));

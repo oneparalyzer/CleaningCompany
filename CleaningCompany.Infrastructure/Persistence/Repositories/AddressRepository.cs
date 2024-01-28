@@ -18,7 +18,7 @@ public sealed class AddressRepository : IAddressRepository
         await _context.Addresses.AddAsync(address, cancellationToken);
     }
 
-    public async Task<IEnumerable<Address>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Address>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Addresses.ToListAsync(cancellationToken);
     }

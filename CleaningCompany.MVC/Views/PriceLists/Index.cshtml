@@ -1,0 +1,39 @@
+﻿@model Result<List<GetAllPriceListsResponse>>
+
+@if (!Model.IsSuccess)
+{
+    foreach (var item in Model.Errors)
+    {
+        <p>@item.Message</p>
+    }
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Название</th>
+                <th scope="col">Перейти</th>
+                <th scope="col">Удалить</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < Model.Value.Count() + 1; i++)
+            {
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>
+                        Прайс-лист от @Model.Value[i - 1].CreatedDate.Date
+                    </td>
+                    <td>
+                        <a asp-controller="PriceLists" asp-action="Get" asp-route-id="@Model.Value[i - 1].PriceListId" type="button" class="btn btn-warning">Перейти</a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger">Удалить</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -3,6 +3,7 @@ using CleaningCompany.Domain.AggregateModels.CityAggregate;
 using CleaningCompany.Domain.AggregateModels.OrderAggregate;
 using CleaningCompany.Domain.AggregateModels.OrderAggregate.Entities;
 using CleaningCompany.Domain.AggregateModels.OrderAggregate.Enumerations;
+using CleaningCompany.Domain.AggregateModels.OrderEmployeeAggregate;
 using CleaningCompany.Domain.AggregateModels.PriceListAggregate;
 using CleaningCompany.Domain.AggregateModels.PriceListAggregate.Entities;
 using CleaningCompany.Domain.AggregateModels.RegionAggregate;

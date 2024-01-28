@@ -1,4 +1,5 @@
 ﻿using CleaningCompany.Application.Common.Interfaces.Repositories;
+using CleaningCompany.Domain.AggregateModels.CityAggregate.ValueObjects;
 using CleaningCompany.Domain.AggregateModels.StreetAggreagte;
 using CleaningCompany.Domain.AggregateModels.StreetAggreagte.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,27 @@ public sealed class StreetRepository : IStreetRepository
         await _context.Streets.AddAsync(street, cancellationToken);
     }
 
-    public async Task<IEnumerable<Street>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Street>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Streets.ToListAsync(cancellationToken);
+        return await _context.Streets
+            .OrderBy(x => x.Title)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<Street>> GetAllByCityIdAsync(CityId cityId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Streets
+            .Where(x => x.CityId == cityId)
+            .OrderBy(x => x.Title)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Street?> GetByIdAsync(StreetId streetId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Streets
+            .FirstOrDefaultAsync(x => 
+                x.Id == streetId, 
+                cancellationToken);
     }
 
     public async Task<bool> IsExistingByIdAsync(StreetId streetId, CancellationToken cancellationToken = default)

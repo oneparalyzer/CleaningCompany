@@ -1,6 +1,6 @@
 ﻿using CleaningCompany.Domain.AggregateModels.OrderAggregate;
-using CleaningCompany.Domain.AggregateModels.OrderAggregate.Entities;
 using CleaningCompany.Domain.AggregateModels.OrderAggregate.ValueObjects;
+using CleaningCompany.Domain.AggregateModels.OrderEmployeeAggregate;
 using CleaningCompany.Domain.AggregateModels.OrderEmployeeAggregate.ValueObjects;
 using CleaningCompany.Domain.AggregateModels.UserAggregate.ValueObjects;
 using CleaningCompany.Infrastructure.Identity.Entities;

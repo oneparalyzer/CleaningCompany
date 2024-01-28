@@ -2,7 +2,8 @@
 
 namespace CleaningCompany.Domain.SeedWorks;
 
-public abstract class Entity<TId> where TId : Id
+public abstract class Entity<TId> 
+    where TId : Id
 {
     protected Entity(TId id)
     {

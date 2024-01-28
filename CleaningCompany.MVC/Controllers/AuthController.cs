@@ -1,6 +1,6 @@
 ﻿using CleaningCompany.Application.CQRS.Users.Commands.Login;
+using CleaningCompany.Application.CQRS.Users.Commands.Logout;
 using CleaningCompany.Application.CQRS.Users.Commands.Register;
-using CleaningCompany.Contracts.Auth.Requests;
 using CleaningCompany.Contracts.Users.Requests;
 using CleaningCompany.Domain.Common.OperationResults;
 using CleaningCompany.Infrastructure.Identity.Entities;
@@ -20,7 +20,7 @@ public sealed class AuthController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> RegisterClient(RegisterClientRequest request)
+    public async Task<IActionResult> RegisterClient(RegisterRequest request)
     {
         Result result = await _sender.Send(new RegisterCommand(
             request.Surname,
@@ -47,7 +47,6 @@ public sealed class AuthController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var result = await _sender.Send(new LoginCommand(
@@ -56,5 +55,13 @@ public sealed class AuthController : Controller
             true));
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        var result = await _sender.Send(new LogoutCommand());
+
+        return Ok();
     }
 }

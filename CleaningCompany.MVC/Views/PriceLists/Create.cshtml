@@ -1,0 +1,89 @@
+﻿@model List<GetAllServicesResponse>
+
+<div class="container">
+    <h1>Создание прайс-листа</h1>
+    <form id="createPriceListForm">
+        <div id="positionsContainer">
+            <!-- Здесь будут добавляться поля для каждой позиции -->
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addPosition()">Добавить позицию</button>
+        <button type="submit" class="btn btn-success">Создать прайс-лист</button>
+    </form>
+    <div id="errorContainer"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    var positions = [];
+
+    function addPosition() {
+        var positionCount = positions.length + 1;
+
+        var positionHtml = `
+                <div class="position">
+                  <h4>Позиция ${positionCount}</h4>
+                  <div class="form-group">
+                        <select id="serviceId" name="ServiceId" class="form-control" required>
+    @foreach (var item in Model)
+    {
+                                        <option value="@item.ServiceId">@item.Title</option>
+    }
+                        </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="price${positionCount}">Цена</label>
+                    <input type="number" class="form-control" id="price${positionCount}" name="Price" step="0.01" required>
+                  </div>
+                </div>
+              `;
+
+        $("#positionsContainer").append(positionHtml);
+        positions.push({ ServiceId: "", Price: "" });
+    }
+
+    $(document).ready(function () {
+        addPosition(); // Добавляем первую позицию при загрузке страницы
+
+        $("#createPriceListForm").submit(function (event) {
+            event.preventDefault();
+
+            // Получаем данные из формы
+            var formData = [];
+            $(".position").each(function (index, element) {
+                var serviceId = $(this).find("select[name='ServiceId']").val();
+                var price = $(this).find("input[name='Price']").val();
+
+                positions[index].ServiceId = serviceId;
+                positions[index].Price = price;
+            });
+
+            console.log(JSON.stringify({ Positions: positions }));
+
+            // Отправляем данные в формате JSON
+            $.ajax({
+                url: '@Url.Action("Create", "PriceLists")',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ Positions: positions }),
+                success: function (response) {
+                    console.log(response);
+                    printResult(createResponse);
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибки
+                }
+            });
+        });
+    });
+
+    function printResult(operationResult) {
+        if (!operationResult.isSuccess) {
+            var errors = operationResult.errors;
+            var errorHtml = errors.map(error => `<p>${error.message}</p>`).join('');
+            $("#errorContainer").html(errorHtml);
+        } else {
+            $("#errorContainer").html("<p>Успешно</p>");
+            $("#title").val("");
+        }
+    }
+</script>

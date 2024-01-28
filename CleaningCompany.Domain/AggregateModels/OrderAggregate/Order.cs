@@ -6,6 +6,7 @@ using CleaningCompany.Domain.AggregateModels.PriceListAggregate.ValueObjects;
 using CleaningCompany.Domain.AggregateModels.UserAggregate.ValueObjects;
 using CleaningCompany.Domain.Common.OperationResults;
 using CleaningCompany.Domain.SeedWorks;
+using ComputerRepair.Domain.Common.Errors;
 
 namespace CleaningCompany.Domain.AggregateModels.OrderAggregate;
 
@@ -13,6 +14,7 @@ public sealed class Order : AggregateRoot<OrderId>
 {
     private Guid _clientId;
 
+    private readonly List<OrderStatus> _statuses;
     private readonly List<OrderPosition> _positions;
 
     private Order(OrderId id) : base(id) { }
@@ -24,8 +26,7 @@ public sealed class Order : AggregateRoot<OrderId>
         DateTime createdDate,
         AddressId addressId,
         Price price,
-        OrderStatus orderStatus,
-        OrderStatusId orderStatusId) : base(id)
+        List<OrderStatus> statuses) : base(id)
 
     {
         _positions = positions;
@@ -33,8 +34,7 @@ public sealed class Order : AggregateRoot<OrderId>
         CreatedDate = createdDate;
         AddressId = addressId;
         Price = price;
-        OrderStatus = orderStatus;
-        OrderStatusId = orderStatusId;
+        _statuses = statuses;
     }
     
 
@@ -47,16 +47,14 @@ public sealed class Order : AggregateRoot<OrderId>
     public DateTime CreatedDate { get; private set; }
     public AddressId AddressId { get; private set; }
     public Price Price { get; private set; }
-    public OrderStatus OrderStatus { get; private set; }
-    public OrderStatusId OrderStatusId { get; private set; }
 
+    public IReadOnlyCollection<OrderStatus> Statuses => _statuses.AsReadOnly();
     public IReadOnlyList<OrderPosition> Positions => _positions.AsReadOnly();
 
     public static Result<Order> Create(
         UserId clientId,
         List<OrderPosition> positions,
-        AddressId addressId,
-        Price price)
+        AddressId addressId)
     {
         Result validateItemsResult = Validate(positions);
 
@@ -66,30 +64,91 @@ public sealed class Order : AggregateRoot<OrderId>
                 validateItemsResult.Errors);
         }
 
-        var orderStatus = OrderStatus.Create(
-            OrderStatusTitle.Adopted);
+        var statuses = new List<OrderStatus>()
+        {
+            OrderStatus.Create(OrderStatusTitle.Adopted)
+        };
+
+        Price price = CalculatePrice(positions);
 
         var order = new Order(
             OrderId.Create(),
             clientId,
             positions,
-            DateTime.Now,
+            DateTime.UtcNow,
             addressId,
             price,
-            orderStatus,
-            orderStatus.Id);
+            statuses);
 
         return Result.Success(order);
     }
 
-    private static Result Validate(List<OrderPosition> items)
+    private static Price CalculatePrice(List<OrderPosition> positions)
+    {
+        decimal price = 0;
+
+        foreach (var position in positions)
+        {
+            price += position.Price.Value;
+        }
+
+        return Price.Create(price);
+    }
+
+    private static Result Validate(List<OrderPosition> positions)
     {
         throw new NotImplementedException();
     }
 
-    //jsfhfgbfdhvgb
     public void EmployeeHasBeenIdentified()
     {
-        throw new NotImplementedException();
+        _statuses.Add(OrderStatus.Create(
+            OrderStatusTitle.EmployeeHasBeenIdentified));
+    }
+
+    public bool IsCompleted()
+    {
+        return _statuses.FirstOrDefault(x =>
+            x.Title == OrderStatusTitle.Completed) is not null;
+    }
+
+    public bool IsNew()
+    {
+        int countStatusesToBeNew = 1;
+
+        return _statuses.Count == countStatusesToBeNew;
+    }
+
+    public OrderStatus GetLastStatus()
+    {
+        return _statuses[_statuses.Count - 1];
+    }
+
+    public Result Completed()
+    {
+        OrderStatus? statusComplete = _statuses.FirstOrDefault(x =>
+            x.Title == OrderStatusTitle.Completed);
+
+        if (statusComplete is not null)
+        {
+            return Result.Failure(Errors.Order
+                .AlreadyCompleted()
+                .ToList());
+        }
+
+        OrderStatus? statusEmployeeIdentified = _statuses.FirstOrDefault(x =>
+            x.Title == OrderStatusTitle.EmployeeHasBeenIdentified);
+
+        if (statusEmployeeIdentified is null)
+        {
+            return Result.Failure(Errors.Order
+                .EmployeeHasNotBeenIdentified()
+                .ToList());
+        }
+
+        _statuses.Add(OrderStatus.Create(
+            OrderStatusTitle.Completed));
+
+        return Result.Success();
     }
 }

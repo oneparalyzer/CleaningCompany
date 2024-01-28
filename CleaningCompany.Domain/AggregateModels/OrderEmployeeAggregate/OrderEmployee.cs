@@ -4,7 +4,7 @@ using CleaningCompany.Domain.AggregateModels.OrderEmployeeAggregate.ValueObjects
 using CleaningCompany.Domain.AggregateModels.UserAggregate.ValueObjects;
 using CleaningCompany.Domain.SeedWorks;
 
-namespace CleaningCompany.Domain.AggregateModels.OrderAggregate.Entities;
+namespace CleaningCompany.Domain.AggregateModels.OrderEmployeeAggregate;
 
 public sealed class OrderEmployee : AggregateRoot<OrderEmployeeId>
 {
@@ -14,8 +14,8 @@ public sealed class OrderEmployee : AggregateRoot<OrderEmployeeId>
     private OrderEmployee(OrderEmployeeId id) : base(id) { }
 
     private OrderEmployee(
-        OrderEmployeeId id, 
-        UserId employeeWhoApprovedId, 
+        OrderEmployeeId id,
+        UserId employeeWhoApprovedId,
         UserId employeeWhoPerformedId,
         OrderId orderId) : base(id)
     {
@@ -27,14 +27,14 @@ public sealed class OrderEmployee : AggregateRoot<OrderEmployeeId>
     public UserId EmployeeWhoPerformedId
     {
         get => UserId.Create(_employeeWhoPerformedId);
-        private set => _employeeWhoPerformedId = value.Value; 
+        private set => _employeeWhoPerformedId = value.Value;
     }
 
 
     public UserId EmployeeWhoApprovedId
     {
         get => UserId.Create(_employeeWhoApprovedId);
-        private set => _employeeWhoApprovedId = value.Value; 
+        private set => _employeeWhoApprovedId = value.Value;
     }
     public OrderId OrderId { get; private set; }
 
@@ -49,7 +49,8 @@ public sealed class OrderEmployee : AggregateRoot<OrderEmployeeId>
             employeeWhoPerformedId,
             orderId);
 
-        orderEmployee.AddDomainEvent(new OrderEmployeeHasBeenIdentifiedDomainEvent(orderEmployee));
+        orderEmployee.AddDomainEvent(
+            new OrderEmployeeHasBeenIdentifiedDomainEvent(orderEmployee));
 
         return orderEmployee;
     }
